@@ -32,8 +32,8 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
 
     viewer_protocol_policy = "allow-all"
     min_ttl                = 0
-    default_ttl            = 3600
-    max_ttl                = 86400
+    default_ttl            = 600
+    max_ttl                = 600
   }
 
   restrictions {
@@ -45,5 +45,12 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
 
   viewer_certificate {
     cloudfront_default_certificate = true
+  }
+
+  tags {
+    ServiceName      = "release.mozilla.org"
+    TechnicalContact = "infra-webops@mozilla.com"
+    Environment      = "stage"
+    Purpose          = "website"
   }
 }

@@ -9,21 +9,21 @@ data "template_file" "codebuild-policy" {
 }
 
 resource "aws_iam_role" "codebuild_role" {
-  name               = "codebuild-role-release-blog"
+  name               = "webops-codebuild-role-release-blog"
   assume_role_policy = "${file("${path.module}/iam/codebuild-role.txt")}"
 }
 
 # IAM configuration
 
 resource "aws_iam_policy" "codebuild_policy" {
-  name        = "codebuild-policy"
+  name        = "webops-codebuild-policy"
   path        = "/service-role/"
   description = "Policy used in trust relationship with CodeBuild"
   policy      = "${data.template_file.codebuild-policy.rendered}"
 }
 
 resource "aws_iam_policy_attachment" "codebuild_policy_attachment" {
-  name       = "codebuild-policy-attachment"
+  name       = "webops-codebuild-policy-attachment"
   policy_arn = "${aws_iam_policy.codebuild_policy.arn}"
   roles      = ["${aws_iam_role.codebuild_role.id}"]
 }
@@ -50,5 +50,12 @@ resource "aws_codebuild_project" "codebuild-project" {
     type      = "GITHUB"
     location  = "${var.source_repository}"
     buildspec = "${var.buildspec}"
+  }
+
+  tags {
+    ServiceName      = "release.mozilla.org"
+    TechnicalContact = "infra-webops@mozilla.com"
+    Environment      = "stage"
+    Purpose          = "website"
   }
 }

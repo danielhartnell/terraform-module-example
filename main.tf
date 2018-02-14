@@ -2,8 +2,8 @@
 
 provider "aws" {
   region                  = "us-west-2"
-  shared_credentials_file = "/Users/dhartnell/.aws/credentials"
-  profile                 = "default"
+  shared_credentials_file = "~/.aws/credentials"
+  profile                 = "it-cdn"
 }
 
 # Load configuration files from template
@@ -24,12 +24,12 @@ module "release_mozilla_org" {
   description = "The Mozilla Release blog"
 
   # S3
-  service_name   = "appsvcs-release-mozilla-org"
+  service_name   = "webops-release-mozilla-org"
   index_document = "index.html"
   acl            = "public-read"
 
   # CloudFront
-  website_domains = ["release.hartnell.me"]
+  website_domains = ["release.allizom.org"]
 
   # CodeBuild
   container         = "jekyll/jekyll:latest"
